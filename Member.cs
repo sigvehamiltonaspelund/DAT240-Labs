@@ -154,8 +154,7 @@ public class Member
     /// </summary>
     public void Expire()
     {
-        // TODO: Implement
-        // Change Status to Expired
+
         Status = MemberStatus.Expired;
         //throw new NotImplementedException();
     }

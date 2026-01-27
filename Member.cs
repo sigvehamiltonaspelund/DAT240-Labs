@@ -15,16 +15,10 @@ public class Member
     private readonly List<Loan> _activeLoans = new();
     public IReadOnlyList<Loan> ActiveLoans => _activeLoans.AsReadOnly();
 
-    /// <summary>
-    /// Creates a new library member.
-    /// </summary>
-    /// <param name="memberId">Unique member identifier (must not be null or empty)</param>
-    /// <param name="name">Member's name (must not be null or empty)</param>
-    /// <param name="email">Member's email (must not be null or empty and must contain @)</param>
-    /// <exception cref="ArgumentException">Thrown when parameters are invalid</exception>
+
     public Member(string memberId, string name, string email)
     {
-        // TODO: Validate parameters
+       
         if (string.IsNullOrWhiteSpace(memberId))
             throw new ArgumentException("MemberId cannot be null or whitespace.", nameof(memberId));
         // - memberId, name, email must not be null or whitespace
@@ -42,17 +36,10 @@ public class Member
         OutstandingFines = 0m;
     }
 
-    /// <summary>
-    /// Checks if the member is allowed to borrow books.
-    /// </summary>
-    /// <returns>True if the member can borrow, false otherwise</returns>
+
     public bool CanBorrow()
     {
-        // TODO: Implement
-        // Member can borrow if:
-        // - Status is Active
-        // - Has fewer than MaxActiveLoans (5) active loans
-        // - Outstanding fines are less than MaxFinesBeforeSuspension ($10)
+
         return Status == MemberStatus.Active &&
                _activeLoans.Count < MaxActiveLoans &&
                OutstandingFines < MaxFinesBeforeSuspension;
@@ -67,18 +54,14 @@ public class Member
     /// <exception cref="InvalidOperationException">Thrown when member cannot borrow</exception>
     public void BorrowBook(Book book)
     {
-        // TODO: Implement
-        // 1. Check if member CanBorrow() - throw InvalidOperationException if not
-        // 2. Call book.Borrow(this.MemberId)
-        // 3. Create a new Loan with a unique loan ID (you can use Guid.NewGuid().ToString())
-        // 4. Add the loan to _activeLoans
+
 
         if (!CanBorrow())
             throw new InvalidOperationException("Member cannot borrow books at this time.");
 
         book.Borrow(this.MemberId);
 
-        var loan = new Loan(Guid.NewGuid().ToString(), MemberId, book, DateTime.Now);
+        var loan = new Loan(Guid.NewGuid().ToString(), this.MemberId, book, DateTime.Now);
         _activeLoans.Add(loan);
 
     }
@@ -90,19 +73,15 @@ public class Member
     /// <param name="loan">The loan to return</param>
     public void ReturnBook(Loan loan)
     {
-        // Check that the loan is active for the member
-        // TODO: Implement
-        // 1. Call loan.Return(DateTime.Now)
-        // 2. Calculate any fines using loan.CalculateFine()
-        // 3. If there are fines, add them using AddFine()
-        // 4. Remove the loan from _activeLoans
+
         if (!_activeLoans.Contains(loan))
-            throw new InvalidCastException("This loan is not active for the member or has already been returned.");
+            throw new InvalidOperationException("This loan is not active for the member or has already been returned.");
         //throw new NotImplementedException();
+        decimal fine = loan.CalculateFine(DateTime.Now); 
         loan.Return(DateTime.Now);
 
         // Mark the loan as returned
-        decimal fine = loan.CalculateFine();
+        
         if (fine > 0)
             AddFine(fine);
 
@@ -116,14 +95,15 @@ public class Member
     /// <param name="amount">The fine amount to add</param>
     public void AddFine(decimal amount)
     {
-        // TODO: Implement
+        
         // 1. Add amount to OutstandingFines
         // 2. If OutstandingFines >= MaxFinesBeforeSuspension, automatically Suspend()
             if (amount <= 0)
                 throw new ArgumentException("Fine amount cannot be negative.", nameof(amount));
         OutstandingFines += amount;
         if (OutstandingFines >= MaxFinesBeforeSuspension)
-            Suspend();}
+            Suspend();
+    }
 
     /// <summary>
     /// Pays off some or all of the outstanding fines.
@@ -132,7 +112,7 @@ public class Member
     /// <exception cref="ArgumentException">Thrown when amount is negative or exceeds outstanding fines</exception>
     public void PayFine(decimal amount)
     {
-        // TODO: Implement
+        
         // 1. Validate amount is positive and doesn't exceed OutstandingFines
         // 2. Subtract amount from OutstandingFines
         // 3. If member was suspended and fines drop below $10, consider auto-activating (optional)
@@ -152,7 +132,7 @@ public class Member
     /// </summary>
     public void Suspend()
     {
-        // TODO: Implement
+       
         // Change Status to Suspended
         Status = MemberStatus.Suspended;
         //throw new NotImplementedException();
@@ -163,8 +143,7 @@ public class Member
     /// </summary>
     public void Activate()
     {
-        // TODO: Implement
-        // Change Status to Active
+
         Status = MemberStatus.Active;
         //throw new NotImplementedException();
     }

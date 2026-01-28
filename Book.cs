@@ -28,11 +28,7 @@ public class Book
         Status = BookStatus.Available;
         ReservedForMemberId = null;
     }
-    /// <summary>
-    /// Marks the book as borrowed by a member.
-    /// </summary>
-    /// <param name="memberId">The ID of the member borrowing the book</param>
-    /// <exception cref="InvalidOperationException">Thrown when the book is not available for borrowing</exception>
+    
     public void Borrow(string memberId)
     {
         

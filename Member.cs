@@ -21,8 +21,7 @@ public class Member
        
         if (string.IsNullOrWhiteSpace(memberId))
             throw new ArgumentException("MemberId cannot be null or whitespace.", nameof(memberId));
-        // - memberId, name, email must not be null or whitespace
-        // - email must contain '@' character
+ 
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name cannot be null or whitespace.", nameof(name));
         if (!email.Contains('@'))

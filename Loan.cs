@@ -9,7 +9,7 @@ public class Loan
 {
    
     private const int LoanPeriodDays = 14;
-    private const decimal Tier1DailyRate = 5.00m;  // Days 1-7
+    private const decimal Tier1DailyRate = 5.00m;  
     private const decimal Tier2DailyRate = 10.00m;  // Days 8-14
     private const decimal Tier3DailyRate = 20.00m;  // Day 15+
 

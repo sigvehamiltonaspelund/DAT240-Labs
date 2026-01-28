@@ -48,13 +48,17 @@ private int GetDaysOverdue(DateTime currentTime)
     return (int)(currentTime - DueDate).TotalDays;  // Ensures >=0, truncates fractions
 }
 
-    public decimal CalculateFine(DateTime currentTime)
+    //public decimal CalculateFine(DateTime currentTime)
+    public decimal CalculateFine(DateTime asOf)
     {
-        if (IsReturned || currentTime <= DueDate) 
+        //if (IsReturned || currentTime <= DueDate)
+        var effectiveTime = IsReturned ? ReturnDate!.Value : asOf; 
+
+        if (effectiveTime <= DueDate)
             return 0;
        
        
-        int daysOverdue = GetDaysOverdue(currentTime);
+        int daysOverdue = GetDaysOverdue(effectiveTime);
         int tiers1Days = Math.Min(daysOverdue, 7);
         int tiers2Days = Math.Min(Math.Max(daysOverdue - 7, 0), 7);
         int tiers3Days = Math.Max(daysOverdue - 14, 0);

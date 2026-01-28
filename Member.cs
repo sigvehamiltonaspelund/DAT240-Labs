@@ -71,9 +71,9 @@ public class Member
         if (!_activeLoans.Contains(loan))
             throw new InvalidOperationException("This loan is not active for the member or has already been returned.");
         //throw new NotImplementedException();
-        decimal fine = loan.CalculateFine(DateTime.Now); 
+        decimal fine = loan.CalculateFine();
         loan.Return(DateTime.Now);
-
+        
         // Mark the loan as returned
         
         if (fine > 0)
@@ -90,10 +90,9 @@ public class Member
     public void AddFine(decimal amount)
     {
         
-        // 1. Add amount to OutstandingFines
-        // 2. If OutstandingFines >= MaxFinesBeforeSuspension, automatically Suspend()
-            if (amount <= 0)
-                throw new ArgumentException("Fine amount cannot be negative.", nameof(amount));
+        
+        if (amount <= 0)
+            throw new ArgumentException("Fine amount cannot be negative.", nameof(amount));
         OutstandingFines += amount;
         if (OutstandingFines >= MaxFinesBeforeSuspension)
             Suspend();

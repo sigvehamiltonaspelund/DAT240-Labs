@@ -55,9 +55,14 @@ private int GetDaysOverdue(DateTime asOf)
 }
 
     //public decimal CalculateFine(DateTime currentTime)
-    public decimal CalculateFine(DateTime asOf)
+    //public decimal CalculateFine(DateTime asOf)
+    public int GetDaysOverdue()
     {
         //if (IsReturned || currentTime <= DueDate)
+        return GetDaysOverdue(DateTime.Now);
+    }    
+    private decimal CalculateFine(DateTime asOf)   
+    { 
         var effectiveTime = IsReturned ? ReturnDate!.Value : asOf; 
 
         if (effectiveTime <= DueDate)
@@ -76,10 +81,10 @@ private int GetDaysOverdue(DateTime asOf)
 
        
     }
-    private int GetDaysOverdue()
-    {
-        return GetDaysOverdue(DateTime.Now);
-    }
+    //private int GetDaysOverdue()
+    //{
+        //return GetDaysOverdue(DateTime.Now);
+   // }
     //public void Return(DateTime returnDate)
     public decimal CalculateFine()
     {

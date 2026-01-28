@@ -52,7 +52,7 @@ public int GetDaysOverdue(DateTime currentTime)
     {
         if (IsReturned || currentTime <= DueDate) 
             return 0;
-        //return (int)Math.Max(0, (currentTime - DueDate).TotalDays);
+       
        
         int daysOverdue = GetDaysOverdue(currentTime);
         int tiers1Days = Math.Min(daysOverdue, 7);

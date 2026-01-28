@@ -72,7 +72,7 @@ public class Book
         // Can only reserve if status is Borrowed (not Available or already Reserved)
         if (String.IsNullOrWhiteSpace(memberId))
             throw new ArgumentException("Member ID cannot be null or empty.", nameof(memberId));
-        // Set ReservedForMemberId and change status to Reserved
+        
         ReservedForMemberId = memberId;
         Status = BookStatus.Reserved;
     }

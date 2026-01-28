@@ -2,7 +2,7 @@ namespace UiS.Dat240.Lab1.Domain.Entities;
 
 public class Member
 {
-    // Constants for business rules
+    
     private const int MaxActiveLoans = 5;
     private const decimal MaxFinesBeforeSuspension = 10.00m;
 

@@ -39,7 +39,7 @@ public class Book
             throw new ArgumentException("Member ID cannot be null or empty.", nameof(memberId));
         // Change status to Borrowed
         Status = BookStatus.Borrowed;
-        ReservedForMemberId = null; // defensively clear any reservation
+        ReservedForMemberId = null; 
     }
 
     

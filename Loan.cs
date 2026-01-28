@@ -68,16 +68,6 @@ public int GetDaysOverdue(DateTime currentTime)
     }
 
 
-    //public int GetDaysOverdue(DateTime currentTime)
-    //{
-    //    return(int)(currentTime - DueDate).TotalDays;
-    //}
-
-    //public decimal CalculateFine(DateTime currentTime)
-    //{
-    //    int daysOverdue = GetDaysOverdue(currentTime);
-        //return daysOverdue <= 0 ? daysOverdue * 0.5m : 0m;
-    //}
 
 
 

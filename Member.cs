@@ -26,8 +26,7 @@ public class Member
             throw new ArgumentException("Name cannot be null or whitespace.", nameof(name));
         if (!email.Contains('@'))
             throw new ArgumentException("Email must contain '@' character.", nameof(email));
-        // Initial status should be Active
-        // Initial outstanding fines should be 0
+   
         MemberId = memberId;
         Name = name;
         Email = email;

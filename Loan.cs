@@ -21,8 +21,9 @@ public class Loan
     public DateTime? ReturnDate { get; private set; }
 
     public bool IsReturned => ReturnDate.HasValue;
-    public bool IsOverdue => !IsReturned && DateTime.Now > DueDate;
-
+    //public bool IsOverdue => !IsReturned && DateTime.Now > DueDate;
+    public bool IsOverdueAt(DateTime asOf) =>
+    !IsReturned && asOf > DueDate;
     public Loan(string loanId, string memberId, Book book, DateTime borrowDate)
     {
        
@@ -41,11 +42,16 @@ public class Loan
         ReturnDate = null;
 
     }
-private int GetDaysOverdue(DateTime currentTime)
+//private int GetDaysOverdue(DateTime currentTime)
+private int GetDaysOverdue(DateTime asOf)
 {
-    if (IsReturned || currentTime <= DueDate)
+    //if (IsReturned || currentTime <= DueDate)
+    var effectiveTime = IsReturned ? ReturnDate!.Value : asOf;
+        
+    if (effectiveTime <= DueDate)
         return 0;
-    return (int)(currentTime - DueDate).TotalDays;  // Ensures >=0, truncates fractions
+        
+    return (int)(effectiveTime - DueDate).TotalDays;  // Ensures >=0, truncates fractions
 }
 
     //public decimal CalculateFine(DateTime currentTime)

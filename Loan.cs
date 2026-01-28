@@ -43,44 +43,52 @@ public class Loan
 
     }
 //private int GetDaysOverdue(DateTime currentTime)
-private int GetDaysOverdue(DateTime asOf)
+private int GetDaysOverdue(DateTime currentTime)
 {
-    //if (IsReturned || currentTime <= DueDate)
-    var effectiveTime = IsReturned ? ReturnDate!.Value : asOf;
+    if (IsReturned || currentTime <= DueDate)
+    //var effectiveTime = IsReturned ? ReturnDate!.Value : asOf;
         
-    if (effectiveTime <= DueDate)
+    //if (effectiveTime <= DueDate)
         return 0;
         
-    return (int)(effectiveTime - DueDate).TotalDays;  // Ensures >=0, truncates fractions
+    return (int)(currentTime - DueDate).TotalDays;  // Ensures >=0, truncates fractions
 }
 
     //public decimal CalculateFine(DateTime currentTime)
     //public decimal CalculateFine(DateTime asOf)
-    //public int GetDaysOverdue()
-    //{
+    public int GetDaysOverdue()
+    {
         //if (IsReturned || currentTime <= DueDate)
-    //    return GetDaysOverdue(DateTime.Now);
-    //}    
-    private decimal CalculateFine(DateTime asOf)   
+       return GetDaysOverdue(DateTime.Now);
+    }    
+    private decimal CalculateFine(DateTime currentTime)   
     { 
-        var effectiveTime = IsReturned ? ReturnDate!.Value : asOf; 
+        //var effectiveTime = IsReturned ? ReturnDate!.Value : asOf; 
 
-        if (effectiveTime <= DueDate)
+        int daysOverdue = GetDaysOverdue(currentTime);
+        if (daysOverdue <= 0)
             return 0;
        
        
-        int daysOverdue = GetDaysOverdue(effectiveTime);
+        
         int tiers1Days = Math.Min(daysOverdue, 7);
         int tiers2Days = Math.Min(Math.Max(daysOverdue - 7, 0), 7);
         int tiers3Days = Math.Max(daysOverdue - 14, 0);
 
          
-        return (tiers1Days * Tier1DailyRate) +
-            (tiers2Days * Tier2DailyRate) +
-            (tiers3Days * Tier3DailyRate);
+        decimal fine = (tiers1Days * Tier1DailyRate) +
+                       (tiers2Days * Tier2DailyRate) +
+                       (tiers3Days * Tier3DailyRate);
 
-       
+        return fine;
     }
+
+    // 4) Public no-arg version – this is what line 74 calls
+public decimal CalculateFine()
+{
+    return CalculateFine(DateTime.Now);
+}
+
     //private int GetDaysOverdue()
     //{
         //return GetDaysOverdue(DateTime.Now);

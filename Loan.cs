@@ -41,7 +41,7 @@ public class Loan
         ReturnDate = null;
 
     }
-public int GetDaysOverdue(DateTime currentTime)
+private int GetDaysOverdue(DateTime currentTime)
 {
     if (IsReturned || currentTime <= DueDate)
         return 0;
@@ -66,7 +66,7 @@ public int GetDaysOverdue(DateTime currentTime)
 
        
     }
-    public int GetDaysOverdue()
+    private int GetDaysOverdue()
     {
         return GetDaysOverdue(DateTime.Now);
     }

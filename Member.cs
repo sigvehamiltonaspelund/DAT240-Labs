@@ -45,11 +45,7 @@ public class Member
         //throw new NotImplementedException();
     }
 
-    /// <summary>
-    /// Borrows a book for this member.
-    /// </summary>
-    /// <param name="book">The book to borrow</param>
-    /// <exception cref="InvalidOperationException">Thrown when member cannot borrow</exception>
+
     public void BorrowBook(Book book)
     {
 

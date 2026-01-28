@@ -64,7 +64,7 @@ public int GetDaysOverdue(DateTime currentTime)
             (tiers2Days * Tier2DailyRate) +
             (tiers3Days * Tier3DailyRate);
 
-        //return fine;
+       
     }
 
 

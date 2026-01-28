@@ -34,7 +34,7 @@ public class Book
         
         if (!IsAvailableForBorrowing())
             throw new InvalidOperationException("Book is not available for borrowing.");
-        // Can only borrow if status is Available
+      
         if (String.IsNullOrWhiteSpace(memberId))
             throw new ArgumentException("Member ID cannot be null or empty.", nameof(memberId));
         // Change status to Borrowed

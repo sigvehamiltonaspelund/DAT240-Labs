@@ -66,13 +66,18 @@ public int GetDaysOverdue(DateTime currentTime)
 
        
     }
-
-
-
-
-
+    public int GetDaysOverdue()
+    {
+        return GetDaysOverdue(DateTime.Now);
+    }
+    //public void Return(DateTime returnDate)
+    public decimal CalculateFine()
+    {
+        return CalculateFine(DateTime.Now);
+    }
     public void Return(DateTime returnDate)
     {
+
         if (IsReturned)
             throw new InvalidOperationException("Loan is already returned.");
         if (returnDate < BorrowDate)

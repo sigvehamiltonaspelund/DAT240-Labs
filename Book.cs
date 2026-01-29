@@ -4,9 +4,9 @@ namespace UiS.Dat240.Lab1.Domain.Entities;
 
 public class Book
 {
-    public string ISBN { get; private set; }
-    public string Title { get; private set; }
-    public string Author { get; private set; }
+    public string ISBN { get;  }
+    public string Title { get;}
+    public string Author { get; }
     public BookStatus Status { get; private set; }
     public string? ReservedForMemberId { get; private set; }
 
@@ -26,18 +26,20 @@ public class Book
         Title = title;
         Author = author;
         Status = BookStatus.Available;
-        ReservedForMemberId = null;
+        
     }
     
     public void Borrow(string memberId)
     {
-        
-        if (!IsAvailableForBorrowing())
-            throw new InvalidOperationException("Book is not available for borrowing.");
-      
-        if (String.IsNullOrWhiteSpace(memberId))
+        if (string.IsNullOrWhiteSpace(memberId))
             throw new ArgumentException("Member ID cannot be null or empty.", nameof(memberId));
-        // Change status to Borrowed
+
+        if (Status != BookStatus.Available)
+            throw new InvalidOperationException("Book is not available for borrowing.");
+        
+        if (ReservedForMemberId != null && ReservedForMemberId != memberId)
+            throw new InvalidOperationException("Book is reserved for another member.");
+
         Status = BookStatus.Borrowed;
         ReservedForMemberId = null; 
     }
@@ -45,32 +47,44 @@ public class Book
     
     public void Return()
     {
-        Status = BookStatus.Available; 
-        ReservedForMemberId = null;
+        if (Status != BookStatus.Borrowed)
+            throw new InvalidOperationException("Only borrowed books can be returned.");
+
+
+        Status = ReservedForMemberId == null
+            ? BookStatus.Available
+            : BookStatus.Reserved;
      
     }
 
-    public void CancelReservation()
+    //public void CancelReservation()
+    public void Reserve(string memberId)
      {
 
-        if (Status != BookStatus.Reserved)  
-            throw new InvalidOperationException("Book is not reserved.");
+        if (string.IsNullOrWhiteSpace(memberId))
+            throw new ArgumentException("Member ID cannot be null or empty.", nameof(memberId));
+
+
+        if (Status != BookStatus.Borrowed)
+            throw new InvalidOperationException("Only borrowed books can be reserved.");
+
+
+         if (ReservedForMemberId != null)
+            throw new InvalidOperationException("Book is already reserved.");
         
-            Status = BookStatus.Available;
-            ReservedForMemberId = null;
+            ReservedForMemberId = memberId;
+            Status = BookStatus.Reserved;
      }
 
-    public void Reserve(string memberId)
+    //public void Reserve(string memberId)
+    public void CancelReservation()
     {
-        
-        if (!CanBeReserved())
-            throw new InvalidOperationException("Book cannot be reserved in its current state.");
-        // Can only reserve if status is Borrowed (not Available or already Reserved)
-        if (String.IsNullOrWhiteSpace(memberId))
-            throw new ArgumentException("Member ID cannot be null or empty.", nameof(memberId));
-        
-        ReservedForMemberId = memberId;
-        Status = BookStatus.Reserved;
+            if (Status != BookStatus.Reserved)
+            throw new InvalidOperationException("Book is not reserved.");
+
+             
+        ReservedForMemberId = null; //memberId;
+        Status = BookStatus.Available; //Reserved;
     }
 
     public bool IsAvailableForBorrowing()
@@ -79,7 +93,7 @@ public class Book
     }
     public bool CanBeReserved()
     {
-        return Status == BookStatus.Available;//Borrowed && string.IsNullOrWhiteSpace(ReservedForMemberId);
+        return Status == BookStatus.Borrowed && ReservedForMemberId == null;
     }
 }
     

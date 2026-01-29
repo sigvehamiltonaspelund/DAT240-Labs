@@ -13,15 +13,16 @@ public class Loan
 
     public string LoanId { get; /*private set;*/ }
     public string MemberId { get; /*private set;*/ }
-    public Book Book { get; } /*private set; 
-    public DateTime BorrowDate { get; } /*private set;*/ 
-    public DateTime DueDate { get; private set; }
+    public Book Book { get; } /*private set; */
+    public DateTime BorrowDate { get; } /*private set;*/  
+    public DateTime DueDate { get; }
     public DateTime? ReturnDate { get; private set; }
 
     public bool IsReturned => ReturnDate.HasValue;
     public bool IsOverdue => IsOverdueAt(DateTime.Now);
-    
+    //public bool IsOverdue => IsOverdueAt(DateTime.Now);
     public Loan(string loanId, string memberId, Book book, DateTime borrowDate)
+    //public Loan(string loanId, string memberId, Book book, DateTime borrowDate)
     
     {
        
@@ -39,11 +40,11 @@ public class Loan
         Book = book;
         BorrowDate = borrowDate;
         DueDate  = BorrowDate.AddDays(LoanPeriodDays);
-        ReturnDate = null;
+        //ReturnDate = null;
         
     }
-    //private bool IsOverdueAt(DateTime asOf)
-     public int GetDaysOverdue()
+    private bool IsOverdueAt(DateTime asOf)
+     //public int GetDaysOverdue()
     {
         return !IsReturned && asOf > DueDate;
     }
@@ -52,13 +53,13 @@ public class Loan
 
         return GetDaysOverdue(DateTime.Now);
     }
-    public int GetDaysOverdue(DateTime currentTime)
+    public int GetDaysOverdue(DateTime asOf)
     {
-        //if (!IsOverdueAt(currentTime))
-        TimeSpan diff = currentTime - DueDate;
-        return diff.Days;
-    Ensures >=0, truncates fractions
-    return 0;
+        if (!IsOverdueAt(asOf))
+            return 0;
+       // return diff.Days;
+//Ensures >=0, truncates fractions
+   // return 0;
 
         return (asOf.Date - DueDate.Date).Days;
     }
@@ -67,61 +68,34 @@ public class Loan
     {
         return CalculateFine(DateTime.Now);
     }
+    //public int GetDaysOverdue()
     public decimal CalculateFine(DateTime asOf)
     {
-    /
-    /TimeSpan diff = currentTime - DueDate;
-
-    //return diff.Days;   
-    //return (int)(currentTime - DueDate).TotalDays;  // Ensures >=0, truncates fractions
-
-public int GetDaysOverdue()
-//private bool IsOverdueAt(DateTime asOf)
-    
-{
-    return GetDaysOverdue(DateTime.Now);
-    //return !IsReturned && asOf > DueDate;
-}    
-//public decimal CalculateFine(DateTime currentTime)
-public decimal GetDaysOverdue(DateTime currentTime)
-//public decimal CalculateFine();   
-{ 
-    return GetDaysOverdue(DateTime.Now); 
-}   
-public decimal CalculateFine(DateTime currentTime)
-{        
-        int daysOverdue = GetDaysOverdue(currentTime);
+        int daysOverdue = GetDaysOverdue(asOf);
         if (daysOverdue <= 0)
             return 0;
-       
-        int tiers1Days = Math.Min(daysOverdue, 7);
-        int tiers2Days = Math.Min(Math.Max(daysOverdue - 7, 0), 7);
-        int tiers3Days = Math.Max(daysOverdue - 14, 0);
 
-         
-        /*decimal fine =*/ 
-        decimal fine = (tiers1Days * Tier1DailyRate) +
-        (tiers2Days * Tier2DailyRate) +
-        (tiers3Days * Tier3DailyRate);
+        int tier1Days = Math.Min(daysOverdue, 7);
+        int tier2Days = Math.Min(Math.Max(daysOverdue - 7, 0), 7);
+        int tier3Days = Math.Max(daysOverdue - 14, 0);
 
-        //return fine;
+        return (tier1Days * Tier1DailyRate) +
+               (tier2Days * Tier2DailyRate) +
+               (tier3Days * Tier3DailyRate);
     }
-    /*
-    public decimal CalculateFine()
-    //public void Return(DateTime returnDate)
-    {
-        return CalculateFine(DateTime.Now);
-    }
-    */
+    
+        //return GetDaysOverdue(DateTime.Now);
     public void Return(DateTime returnDate)
-    {
+   
+{
         if (IsReturned)
             throw new InvalidOperationException("Loan is already returned.");
+
         if (returnDate < BorrowDate)
             throw new ArgumentException("Return date cannot be before borrow date.", nameof(returnDate));
+        
         ReturnDate = returnDate;
-
-    }   
-}
+    }
+}    
 
 

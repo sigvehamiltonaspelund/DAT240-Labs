@@ -27,6 +27,7 @@ public class Loan
 
     
     public Loan(string loanId, string memberId, Book book, DateTime borrowDate)
+    
     {
        
         if (string.IsNullOrWhiteSpace(loanId))
@@ -40,6 +41,7 @@ public class Loan
 
         LoanId = loanId;
         MemberId = memberId;
+        Book = book;
         BorrowDate = borrowDate;
         DueDate  = BorrowDate.AddDays(LoanPeriodDays);
         ReturnDate = null;
@@ -82,11 +84,12 @@ private decimal CalculateFine(DateTime asOf)
         int tiers3Days = Math.Max(daysOverdue - 14, 0);
 
          
-        decimal fine = (tiers1Days * Tier1DailyRate) +
-                       (tiers2Days * Tier2DailyRate) +
-                       (tiers3Days * Tier3DailyRate);
+        /*decimal fine =*/ 
+        return (tiers1Days * Tier1DailyRate) +
+        (tiers2Days * Tier2DailyRate) +
+        (tiers3Days * Tier3DailyRate);
 
-        return fine;
+        //return fine;
     }
 
     public void Return(DateTime returnDate)

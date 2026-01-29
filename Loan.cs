@@ -54,15 +54,17 @@ private int GetDaysOverdue(DateTime currentTime)
 {
     if (IsReturned || currentTime <= DueDate)
         return 0;
-        
-    return (int)(currentTime - DueDate).TotalDays;  // Ensures >=0, truncates fractions
+
+    TimeSpan diff = currentTime - DueDate;
+    return diff.Days;   
+    //return (int)(currentTime - DueDate).TotalDays;  // Ensures >=0, truncates fractions
 }
 
 private bool IsOverdueAt(DateTime asOf)
     
 {
     return !IsReturned && asOf > DueDate;
-    }    
+}    
 public decimal CalculateFine()   
     { 
     return CalculateFine(DateTime.Now); 
@@ -87,21 +89,6 @@ private decimal CalculateFine(DateTime asOf)
         return fine;
     }
 
-    // 4) Public no-arg version – this is what line 74 calls
-public decimal CalculateFine()
-{
-    return CalculateFine(DateTime.Now);
-}
-
-    //private int GetDaysOverdue()
-    //{
-        //return GetDaysOverdue(DateTime.Now);
-   // }
-    //public void Return(DateTime returnDate)
-   
-    //{
-    //    return CalculateFine(DateTime.Now);
-    
     public void Return(DateTime returnDate)
     {
 
@@ -110,8 +97,8 @@ public decimal CalculateFine()
         if (returnDate < BorrowDate)
             throw new ArgumentException("Return date cannot be before borrow date.", nameof(returnDate));
         ReturnDate = returnDate;
-    }
+    
+    }   
 
 }
 
- 

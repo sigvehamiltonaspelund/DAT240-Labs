@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace UiS.Dat240.Lab1.Domain.Entities;
 
 public class Member
@@ -89,8 +92,6 @@ public class Member
     /// <param name="amount">The fine amount to add</param>
     public void AddFine(decimal amount)
     {
-        
-        
         if (amount <= 0)
             throw new ArgumentException("Fine amount cannot be negative.", nameof(amount));
         OutstandingFines += amount;
@@ -141,21 +142,19 @@ public class Member
         //throw new NotImplementedException();
     }
 
-    /// <summary>
-    /// Marks the member's account as expired.
-    
-    /// </summary>
+
     public void Expire()
     {
 
         Status = MemberStatus.Expired;
-        //throw new NotImplementedException();
+        
     }
-}
 
-public enum MemberStatus
-{
-    Active,
-    Suspended,
-    Expired
+
+    public enum MemberStatus
+    {
+        Active,
+        Suspended,
+        Expired
+    }
 }

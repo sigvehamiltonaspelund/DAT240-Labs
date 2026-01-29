@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Threading.Tasks;
 
 namespace UiS.Dat240.Lab1.Domain.Entities;
 
@@ -9,9 +9,9 @@ public class Loan
 {
    
     private const int LoanPeriodDays = 14;
-    private const decimal Tier1DailyRate = 5.00m;  
-    private const decimal Tier2DailyRate = 10.00m;  // Days 8-14
-    private const decimal Tier3DailyRate = 20.00m;  // Day 15+
+    private const decimal Tier1DailyRate = 1.0m;  
+    private const decimal Tier2DailyRate = 2.0m;  // Days 8-14
+    private const decimal Tier3DailyRate = 5.0m;  // Day 15+
 
     public string LoanId { get; private set; }
     public string MemberId { get; private set; }
@@ -21,9 +21,11 @@ public class Loan
     public DateTime? ReturnDate { get; private set; }
 
     public bool IsReturned => ReturnDate.HasValue;
-    //public bool IsOverdue => !IsReturned && DateTime.Now > DueDate;
-    public bool IsOverdueAt(DateTime asOf) =>
-    !IsReturned && asOf > DueDate;
+   
+    public bool IsOverdue => IsOverdueAt(DateTime.Now);
+    //public bool IsOverdueAt(DateTime asOf) =>!IsReturned && asOf > DueDate;
+
+    
     public Loan(string loanId, string memberId, Book book, DateTime borrowDate)
     {
        
@@ -33,7 +35,8 @@ public class Loan
         if (string.IsNullOrWhiteSpace(memberId))
             throw new ArgumentException("Member ID is required.", nameof(memberId));
   
-        Book = book ?? throw new ArgumentNullException(nameof(book));
+        //Book = book ?? throw new ArgumentNullException(nameof(book));
+        ArgumentNullException.ThrowIfNull(book);
 
         LoanId = loanId;
         MemberId = memberId;
@@ -42,30 +45,31 @@ public class Loan
         ReturnDate = null;
 
     }
-//private int GetDaysOverdue(DateTime currentTime)
+     public int GetDaysOverdue()
+    {
+        return GetDaysOverdue(DateTime.Now);
+    }
+
 private int GetDaysOverdue(DateTime currentTime)
 {
     if (IsReturned || currentTime <= DueDate)
-    //var effectiveTime = IsReturned ? ReturnDate!.Value : asOf;
-        
-    //if (effectiveTime <= DueDate)
         return 0;
         
     return (int)(currentTime - DueDate).TotalDays;  // Ensures >=0, truncates fractions
 }
 
-    //public decimal CalculateFine(DateTime currentTime)
-    //public decimal CalculateFine(DateTime asOf)
-    public int GetDaysOverdue()
-    {
-        //if (IsReturned || currentTime <= DueDate)
-       return GetDaysOverdue(DateTime.Now);
+private bool IsOverdueAt(DateTime asOf)
+    
+{
+    return !IsReturned && asOf > DueDate;
     }    
-    private decimal CalculateFine(DateTime currentTime)   
+public decimal CalculateFine()   
     { 
-        //var effectiveTime = IsReturned ? ReturnDate!.Value : asOf; 
-
-        int daysOverdue = GetDaysOverdue(currentTime);
+    return CalculateFine(DateTime.Now); 
+    }   
+private decimal CalculateFine(DateTime asOf)
+    {        
+        int daysOverdue = GetDaysOverdue(asOf);
         if (daysOverdue <= 0)
             return 0;
        
@@ -94,7 +98,7 @@ public decimal CalculateFine()
         //return GetDaysOverdue(DateTime.Now);
    // }
     //public void Return(DateTime returnDate)
-    //public decimal CalculateFine()
+   
     //{
     //    return CalculateFine(DateTime.Now);
     

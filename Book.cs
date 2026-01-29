@@ -1,4 +1,4 @@
-//using System.ComponentModel;
+using System;
 
 namespace UiS.Dat240.Lab1.Domain.Entities;
 

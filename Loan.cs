@@ -53,15 +53,15 @@ public class Loan
 
         return GetDaysOverdue(DateTime.Now);
     }
-    public int GetDaysOverdue(DateTime asOf)
+    public int GetDaysOverdue(DateTime currentTime)
     {
-        if (!IsOverdueAt(asOf))
+        if (!IsOverdueAt(currentTime))
             return 0;
        // return diff.Days;
 //Ensures >=0, truncates fractions
    // return 0;
 
-        return (asOf.Date - DueDate.Date).Days;
+        return (currentTime.Date - DueDate.Date).Days;
     }
 
     public decimal CalculateFine()
@@ -69,9 +69,9 @@ public class Loan
         return CalculateFine(DateTime.Now);
     }
     //public int GetDaysOverdue()
-    public decimal CalculateFine(DateTime asOf)
+    public decimal CalculateFine(DateTime currentTime)
     {
-        int daysOverdue = GetDaysOverdue(asOf);
+        int daysOverdue = GetDaysOverdue(currentTime);
         if (daysOverdue <= 0)
             return 0;
 

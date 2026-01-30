@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UiS.Dat240.Lab1.Domain.Entities;
 
@@ -27,9 +28,11 @@ public class Member
  
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name cannot be null or whitespace.", nameof(name));
-        if (!email.Contains('@'))
-            throw new ArgumentException("Email must contain '@' character.", nameof(email));
-   
+        //if (!email.Contains('@'))
+        //    throw new ArgumentException("Email must contain '@' character.", nameof(email));
+        if (string.IsNullOrWhiteSpace(email) || !email.Contains('@'))
+            throw new ArgumentException("Email is invalid.", nameof(email));
+        
         MemberId = memberId;
         Name = name;
         Email = email;
@@ -58,7 +61,13 @@ public class Member
 
         book.Borrow(this.MemberId);
 
-        var loan = new Loan(Guid.NewGuid().ToString(), this.MemberId, book, DateTime.Now);
+        var loan = new Loan(
+            Guid.NewGuid().ToString(), 
+            MemberId, 
+            book, 
+            DateTime.Now
+        );
+        
         _activeLoans.Add(loan);
 
     }
@@ -71,11 +80,21 @@ public class Member
     public void ReturnBook(Loan loan)
     {
 
-        if (!_activeLoans.Contains(loan))
-            throw new InvalidOperationException("This loan is not active for the member or has already been returned.");
-        //throw new NotImplementedException();
-        decimal fine = loan.CalculateFine();
-        loan.Return(DateTime.Now);
+        var activeLoan = _activeLoans.FirstOrDefault(l => l.LoanId == loan.LoanId);
+        if (activeLoan == null)
+            throw new InvalidOperationException(
+                    "This loan is not active for the member or has already been returned."
+                );
+        
+        //if (!_activeLoans.Contains(loan))
+         //   throw new InvalidOperationException("This loan is not active for the member or has already been returned.");
+        
+        //loan.Return(DateTime.Now);
+        //decimal fine = loan.CalculateFine();
+
+        activeLoan.Return(DateTime.Now);
+        decimal fine = activeLoan.CalculateFine();
+        
         
         // Mark the loan as returned
         
@@ -84,12 +103,6 @@ public class Member
 
         _activeLoans.Remove(loan);
     }   
-  
-
-    /// <summary>
-    /// Adds a fine to the member's account.
-    /// </summary>
-    /// <param name="amount">The fine amount to add</param>
     public void AddFine(decimal amount)
     {
         if (amount <= 0)

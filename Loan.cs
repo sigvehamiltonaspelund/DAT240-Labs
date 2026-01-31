@@ -57,9 +57,7 @@ public class Loan
     {
         if (!IsOverdueAt(currentTime))
             return 0;
-       // return diff.Days;
-//Ensures >=0, truncates fractions
-   // return 0;
+
 
         return (currentTime.Date - DueDate.Date).Days;
     }
